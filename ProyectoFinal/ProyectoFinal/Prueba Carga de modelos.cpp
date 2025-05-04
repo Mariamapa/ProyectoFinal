@@ -105,7 +105,12 @@ float vertices[] = {
 };
 
 
+//KeyFrames
+float PersonaPosX=4.0f, PersonaPosY=1.0f, PersonaPosZ=-3.8f;
 
+#define MAX_FRAMES 9
+int i_max_steps = 190;
+int i_curr_steps = 0;
 glm::vec3 Light1 = glm::vec3(0);
 //Anim
 float rotChair = 180.0f; //Angulo de rotacion de sillas
@@ -147,6 +152,7 @@ float rotChair16N = 180.0f;
 float rotChair17N = 180.0f;
 float rotChair18N = 180.0f;
 float rotChair19N = 180.0f;
+float rotExtintor = 270.0f;
 float direccion = 1.0f;
 float maxRot = 2.0f;
 float radio = 1.0f;        // Radio del c rculo
@@ -161,10 +167,29 @@ bool AnimChairs4 = false;
 bool AnimChairs5 = false;
 bool AnimChairs6 = false;
 bool AnimChairs7 = false;
+bool AnimFurniture = false;
+bool AnimFurniture2 = false;
+bool AnimFurniture3 = false;
+bool AnimFurniture4 = false;
+bool step = false;
+float Brazos = 0.0f;
+float Piernas = 0.0f;
+float Cabeza = 0.0f;
+float Brazos1 = 0.0f;
+float Piernas1 = 0.0f;
+float Cabeza1 = 0.0f;
+float head = 0.0f;
+int PersonaAnim1 = 0.0f;
+int PersonaAnim2 = 0.0f;
+int PersonaAnim3 = 0.0f;
+int PersonaAnim4 = 0.0f;
 float rotPantalla = 180.0f;
+float rotPC = 90.0f;
+float rotMonitor = -90.0f;
 float angulo = 180.0f;
 float rotTable = -270.0f;
 float rotLib = -90.0f;
+float PersonaRot = 0.0f;
 glm::vec3 chairPos1(3.4f, 0.01f, -2.4f);
 glm::vec3 chairPos2(3.4f, 0.01f, -1.5f);
 glm::vec3 chairPos3(3.4f, 0.01f, -0.5f);
@@ -203,7 +228,114 @@ glm::vec3 chairPos16N(-0.8f, 0.5f, 0.0f);
 glm::vec3 chairPos17N(-0.8f, 0.5f, 1.0f);
 glm::vec3 chairPos18N(-0.8f, 0.5f, 2.0f);
 glm::vec3 chairPos19N(-0.8f, 0.5f, 2.7f);
+glm::vec3 TablePos1(2.59f, 0.0f, -3.3f);
+glm::vec3 TablePos2(2.59f, 0.0f, 0.0f);
+glm::vec3 TablePos3(2.59f, 0.0f, 2.4f);
+glm::vec3 TablePos4(0.8f, 0.0f, -3.3f);
+glm::vec3 TablePos5(0.8f, 0.0f, 0.0f);
+glm::vec3 TablePos6(0.8f, 0.0f, 2.4f);
+glm::vec3 TablePos7(-0.8f, 0.0f, -3.3f);
+glm::vec3 TablePos8(-0.8f, 0.0f, 0.0f);
+glm::vec3 TablePos9(-0.8f, 0.0f, 2.4f);
 glm::vec3 chairEsc(0.0001f, 0.0001f, 0.0001f);
+glm::vec3 TableEsc(0.05f, 0.05f, 0.05f);
+glm::vec3 TableEsc2(0.0001f, 0.0001f, 0.0001f);
+glm::vec3 PCPos1(2.6f, 0.05f, -2.6f);
+glm::vec3 PCPos2(2.6f, 0.05f, 0.6f);
+glm::vec3 PCPos3(2.6f, 0.05f, 3.0f);
+glm::vec3 PCPos4(0.8f, 0.05f, -2.6f);
+glm::vec3 PCPos5(0.8f, 0.05f, 0.6f);
+glm::vec3 PCPos6(0.8f, 0.05f, 3.0f);
+glm::vec3 PCPos7(-0.7f, 0.05f, -2.6f);
+glm::vec3 PCPos8(-0.7f, 0.05f, 0.6f);
+glm::vec3 PCPos9(-0.7f, 0.05f, 3.0f);
+glm::vec3 BrazoIzqPos(2.4f, 0.808f, -3.1f);
+glm::vec3 MonitorPos2(2.4f, 0.808f, 0.0f);
+glm::vec3 MonitorPos3(2.4f, 0.808f, 2.4f);
+glm::vec3 MonitorPos4(0.6f, 0.808f, -3.1f);
+glm::vec3 MonitorPos5(0.6f, 0.808f, 0.0f);
+glm::vec3 MonitorPos6(0.6f, 0.808f, 2.4f);
+glm::vec3 MonitorPos7(-1.0f, 0.808f, -3.1f);
+glm::vec3 MonitorPos8(-1.0f, 0.808f, 0.0f);
+glm::vec3 MonitorPos9(-1.0f, 0.808f, 2.4f);
+//glm::vec3 PersonaPos(4.0f, 1.00f, -3.8f);
+glm::vec3 PersonaPos(PersonaPosX, PersonaPosY, PersonaPosZ);
+glm::vec3 PersonaEsc(1.2f, 1.2f, 1.2f);
+glm::vec3 PCEsc(0.0001f, 0.0001f, 0.0001f);
+glm::vec3 MonitorEsc(0.0001f, 0.0001f, 0.0001f);
+
+
+typedef struct _frame {
+
+	float PersonaRot = 0.0f;;
+	float PersonaRotInc = 0.0f;
+	float PersonaPosX=4.0f;
+	float PersonaPosY=1.0f;
+	float PersonaPosZ=-3.8f;
+	float incX;
+	float incY;
+	float incZ;
+	float head;
+	float headInc;
+	float Brazos = 0.0f;
+	float Piernas = 0.0f;
+	float BrazosInc = 0.0f;
+	float PiernasInc = 0.0f;
+
+
+
+}FRAME;
+
+FRAME KeyFrame[MAX_FRAMES];
+int FrameIndex = 0;			//introducir datos
+bool play = false;
+int playIndex = 0;
+
+//=================================KEYFRAMES=============================================
+
+void saveFrame(void)
+{
+
+	printf("frameindex %d\n", FrameIndex);
+
+	KeyFrame[FrameIndex].PersonaPosX = PersonaPosX;
+	KeyFrame[FrameIndex].PersonaPosY = PersonaPosY;
+	KeyFrame[FrameIndex].PersonaPosZ = PersonaPosZ;
+
+	KeyFrame[FrameIndex].PersonaRot = PersonaRot;
+
+	//Partes dela persona
+	KeyFrame[FrameIndex].head = head;
+	KeyFrame[FrameIndex].Brazos = Brazos;
+	KeyFrame[FrameIndex].Piernas = Piernas;
+
+
+	FrameIndex++;
+}
+
+void resetElements(void)
+{
+	PersonaPosX = KeyFrame[0].PersonaPosX;
+	PersonaPosY = KeyFrame[0].PersonaPosY;
+	PersonaPosZ = KeyFrame[0].PersonaPosZ;
+
+	PersonaRot = KeyFrame[0].PersonaRot;
+	//Partes del perro
+	head = KeyFrame[0].head;
+	Brazos = KeyFrame[0].Brazos;
+	Piernas = KeyFrame[0].Piernas;
+}
+void interpolation(void)
+{
+
+	KeyFrame[playIndex].incX = (KeyFrame[playIndex + 1].PersonaPosX - KeyFrame[playIndex].PersonaPosX) / i_max_steps;
+	KeyFrame[playIndex].incY = (KeyFrame[playIndex + 1].PersonaPosY - KeyFrame[playIndex].PersonaPosY) / i_max_steps;
+	KeyFrame[playIndex].incZ = (KeyFrame[playIndex + 1].PersonaPosZ - KeyFrame[playIndex].PersonaPosZ) / i_max_steps;
+
+	KeyFrame[playIndex].PersonaRotInc = (KeyFrame[playIndex + 1].PersonaRot - KeyFrame[playIndex].PersonaRot) / i_max_steps;
+
+
+}
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -260,13 +392,14 @@ int main()
 	Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
 
 	//models
-	Model Piso((char*)"Models/Piso.obj");
-	//Model Gabeta((char*)"Models/Pantalla.obj");
-	//Model Repisas((char*)"Models/Proyecto/Repisas.obj");
-	//Model Servidor((char*)"Models/Proyecto/Servidor1.obj");
-	//Model Lampara((char*)"Models/Proyecto/Lampara.obj");
-	//Model Gabeta((char*)"Models/Proyecto/Gabeta.obj");
+	/*Model Piso((char*)"Models/Piso.obj");
+	Model Gabeta((char*)"Models/Pantalla.obj");
+	Model Repisas((char*)"Models/Proyecto/Repisas.obj");
+	Model Servidor((char*)"Models/Proyecto/Servidor1.obj");
+	Model Lampara((char*)"Models/Proyecto/Lampara.obj");
+	Model Gabeta((char*)"Models/Proyecto/Gabeta.obj");*/
 	Model Mesa((char*)"Models/Proyecto/Mesa.obj");
+	Model Mesa2((char*)"Models/Proyecto/Mesa2.obj");
 	Model Fila_Mesa1((char*)"Models/Proyecto/Fila_Mesas1.obj");
 	Model Fila_Mesa2((char*)"Models/Proyecto/Fila_Mesas2.obj");
 	Model Fila_Mesa3((char*)"Models/Proyecto/Fila_Mesas3.obj");
@@ -279,12 +412,43 @@ int main()
 	Model Silla_N((char*)"Models/Proyecto/Silla_N.obj");
 	Model Cuarto((char*)"Models/Proyecto/labprueba.obj");
 	Model Techo((char*)"Models/Proyecto/techo.obj");
+	Model PC((char*)"Models/Proyecto/PC.obj");
 	Model Libreria((char*)"Models/Proyecto/Libreria.obj");
 	Model Puerta((char*)"Models/Proyecto/Puerta.obj");
 	Model Pantalla((char*)"Models/Proyecto/Pantalla.obj");
 	Model PantallaInteligente((char*)"Models/Proyecto/Pantalla_Inteligente.obj");
 	Model Pizarron((char*)"Models/Proyecto/Pizarron.obj");
+	Model Monitor((char*)"Models/Proyecto/Monitor.obj");
+	Model TecladoMouse((char*)"Models/Proyecto/TecladoMouse.obj");
+	Model Extintor((char*)"Models/Proyecto/Extintor.obj");
+	Model LentesVR((char*)"Models/Proyecto/Lentes_VR.obj");
+	Model Cabeza((char*)"Models/Proyecto/Cabeza.obj");
+	Model Cuerpo((char*)"Models/Proyecto/Cuerpo.obj");
+	Model BrazoI((char*)"Models/Proyecto/BrazoI.obj");
+	Model BrazoD((char*)"Models/Proyecto/BrazoD.obj");
+	Model PiernaI((char*)"Models/Proyecto/PiernaI.obj");
+	Model PiernaD((char*)"Models/Proyecto/PiernaD.obj");
 	//=================================================================================================================================
+
+	//KeyFrames
+	for (int i = 0; i < MAX_FRAMES; i++)
+	{
+		KeyFrame[i].PersonaPosX = 0;
+		KeyFrame[i].PersonaPosY = 0;
+		KeyFrame[i].PersonaPosZ = 0;
+		KeyFrame[i].incX = 0;
+		KeyFrame[i].incY = 0;
+		KeyFrame[i].incZ = 0;
+		KeyFrame[i].PersonaRot = 0;
+		KeyFrame[i].PersonaRotInc = 0;
+		KeyFrame[i].head = 0;
+		KeyFrame[i].headInc = 0;
+		KeyFrame[i].Brazos = 0;
+		KeyFrame[i].BrazosInc = 0;
+		KeyFrame[i].Piernas = 0;
+		KeyFrame[i].PiernasInc = 0;
+
+	}
 
 	// First, set the container's VAO (and VBO)
 	GLuint VBO, VAO;
@@ -426,7 +590,7 @@ int main()
 		//==================================Carga de modelos Primera Fila=======================================
 		model = glm::mat4(1);
 		model = glm::translate(modelTemp, glm::vec3(2.5f, 0.0f, 0.3f));
-		model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+		model = glm::scale(model, TableEsc);
 		model = glm::rotate(model, glm::radians(rotTable), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Fila_Mesa1.Draw(lightingShader);
@@ -531,7 +695,7 @@ int main()
 		//==================================Carga de modelos Segunda Fila=======================================
 		model = glm::mat4(1);
 		model = glm::translate(modelTemp, glm::vec3(1.0f, 0.0f, 0.3f));
-		model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+		model = glm::scale(model, TableEsc);
 		model = glm::rotate(model, glm::radians(rotTable), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Fila_Mesa2.Draw(lightingShader);
@@ -643,7 +807,7 @@ int main()
 		//==================================Carga de modelos Tercera Fila=======================================
 		model = glm::mat4(1);
 		model = glm::translate(modelTemp, glm::vec3(-3.2f, 0.0f, 2.6f));
-		model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+		model = glm::scale(model, TableEsc);
 		model = glm::rotate(model, glm::radians(rotTable), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Fila_Mesa3.Draw(lightingShader);
@@ -746,12 +910,27 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Pizarron.Draw(lightingShader);
 
+		//model = glm::mat4(1);
+		//model = glm::translate(modelTemp, glm::vec3(4.0f, 0.2f, -3.0f));
+		//model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		//model = glm::rotate(model, glm::radians(rotPantalla - 90), glm::vec3(0.0f, 1.0f, 0.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//Pizarron.Draw(lightingShader);
+
 		model = glm::mat4(1);
-		model = glm::translate(modelTemp, glm::vec3(3.0f, 0.2f, -2.0f));
-		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		model = glm::translate(modelTemp, glm::vec3(0.5f, 1.5f, -3.8f));
+		model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));
+		model = glm::rotate(model, glm::radians(rotExtintor ), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Extintor.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, glm::vec3(0.0f, 0.2f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
 		model = glm::rotate(model, glm::radians(rotPantalla - 90), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Pizarron.Draw(lightingShader);
+		LentesVR.Draw(lightingShader);
+		//============================================Mesas========================================================================================
 
 		model = glm::mat4(1);
 		model = glm::translate(modelTemp, glm::vec3(-3.0f, 0.2f, 2.0f));
@@ -759,10 +938,232 @@ int main()
 		model = glm::rotate(model, glm::radians(rotTable - 90), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Mesa.Draw(lightingShader);
+		////=====================================Fila1=============================================
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp,TablePos1);
+		model = glm::scale(model, TableEsc2);
+		model = glm::rotate(model, glm::radians(rotTable), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa2.Draw(lightingShader);
 
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, PCPos1);
+		model = glm::scale(model, PCEsc);
+		model = glm::rotate(model, glm::radians(rotPC), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PC.Draw(lightingShader);
 
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, BrazoIzqPos);
+		model = glm::scale(model, MonitorEsc);
+		model = glm::rotate(model, glm::radians(rotMonitor), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Monitor.Draw(lightingShader);
 
-		
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, TablePos2);
+		model = glm::scale(model, TableEsc2);
+		model = glm::rotate(model, glm::radians(rotTable), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa2.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, PCPos2);
+		model = glm::scale(model, PCEsc);
+		model = glm::rotate(model, glm::radians(rotPC), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PC.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, MonitorPos2);
+		model = glm::scale(model, MonitorEsc);
+		model = glm::rotate(model, glm::radians(rotMonitor), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Monitor.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, TablePos3);
+		model = glm::scale(model, TableEsc2);
+		model = glm::rotate(model, glm::radians(rotTable), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa2.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, PCPos3);
+		model = glm::scale(model, PCEsc);
+		model = glm::rotate(model, glm::radians(rotPC), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PC.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, MonitorPos3);
+		model = glm::scale(model, MonitorEsc);
+		model = glm::rotate(model, glm::radians(rotMonitor), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Monitor.Draw(lightingShader);
+		//=====================================Fila2=============================================
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, TablePos4);
+		model = glm::scale(model, TableEsc2);
+		model = glm::rotate(model, glm::radians(rotTable), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa2.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, PCPos4);
+		model = glm::scale(model, PCEsc);
+		model = glm::rotate(model, glm::radians(rotPC), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PC.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, MonitorPos4);
+		model = glm::scale(model, MonitorEsc);
+		model = glm::rotate(model, glm::radians(rotMonitor), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Monitor.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, TablePos5);
+		model = glm::scale(model, TableEsc2);
+		model = glm::rotate(model, glm::radians(rotTable), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa2.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, PCPos5);
+		model = glm::scale(model, PCEsc);
+		model = glm::rotate(model, glm::radians(rotPC), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PC.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, MonitorPos5);
+		model = glm::scale(model, MonitorEsc);
+		model = glm::rotate(model, glm::radians(rotMonitor), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Monitor.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, TablePos6);
+		model = glm::scale(model, TableEsc2);
+		model = glm::rotate(model, glm::radians(rotTable), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa2.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, PCPos6);
+		model = glm::scale(model, PCEsc);
+		model = glm::rotate(model, glm::radians(rotPC), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PC.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, MonitorPos6);
+		model = glm::scale(model, MonitorEsc);
+		model = glm::rotate(model, glm::radians(rotMonitor), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Monitor.Draw(lightingShader);
+		//=====================================Fila3=============================================
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, TablePos7);
+		model = glm::scale(model, TableEsc2);
+		model = glm::rotate(model, glm::radians(rotTable), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa2.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, PCPos7);
+		model = glm::scale(model, PCEsc);
+		model = glm::rotate(model, glm::radians(rotPC), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PC.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, MonitorPos7);
+		model = glm::scale(model, MonitorEsc);
+		model = glm::rotate(model, glm::radians(rotMonitor), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Monitor.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, TablePos8);
+		model = glm::scale(model, TableEsc2);
+		model = glm::rotate(model, glm::radians(rotTable), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa2.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, PCPos8);
+		model = glm::scale(model, PCEsc);
+		model = glm::rotate(model, glm::radians(rotPC), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PC.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, MonitorPos8);
+		model = glm::scale(model, MonitorEsc);
+		model = glm::rotate(model, glm::radians(rotMonitor), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Monitor.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, TablePos9);
+		model = glm::scale(model, TableEsc2);
+		model = glm::rotate(model, glm::radians(rotTable), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa2.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, PCPos9);
+		model = glm::scale(model, PCEsc);
+		model = glm::rotate(model, glm::radians(rotPC), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PC.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(modelTemp, MonitorPos9);
+		model = glm::scale(model, MonitorEsc);
+		model = glm::rotate(model, glm::radians(rotMonitor), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Monitor.Draw(lightingShader);
+		//=====================================Modelo de Persona==========================================================
+		model = glm::mat4(1);
+		modelTemp = model = glm::translate(model, glm::vec3(PersonaPosX, PersonaPosY, PersonaPosZ));
+		model = glm::scale(model, PersonaEsc);
+		modelTemp = model = glm::rotate(model, glm::radians(PersonaRot), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Cuerpo.Draw(lightingShader);
+
+		model = modelTemp;
+		model = glm::translate(model, glm::vec3(0.031f, 0.173f, 0.0f));
+		model = glm::rotate(model, glm::radians(head), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Cabeza.Draw(lightingShader);
+
+		model = modelTemp;
+		model = glm::translate(model, glm::vec3(0.061f, 0.107f, -0.05f));
+		model = glm::rotate(model, glm::radians(Brazos1), glm::vec3(-1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		BrazoI.Draw(lightingShader);
+
+		model = modelTemp;
+		model = glm::translate(model, glm::vec3(0.00f, 0.107f, -0.05f));
+		model = glm::rotate(model, glm::radians(Brazos1), glm::vec3(-1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		BrazoD.Draw(lightingShader);
+
+		model = modelTemp;
+		//model = glm::translate(model, glm::vec3(0.082f, -0.046, -0.218));
+		model = glm::rotate(model, glm::radians(Piernas1), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PiernaI.Draw(lightingShader);
+
+		model = modelTemp;
+		//model = glm::translate(model, glm::vec3(-0.083f, -0.057f, -0.231f));
+		model = glm::rotate(model, glm::radians(Piernas1), glm::vec3(-1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PiernaD.Draw(lightingShader);
 		//================================================================================================================
 		// 
 		//================================================================================================================
@@ -847,22 +1248,40 @@ void DoMovement()
 		pointLightPositions[0].x -= 0.01f;
 	}
 
-	if (keys[GLFW_KEY_Y])
+	if (keys[GLFW_KEY_K])
 	{
-		pointLightPositions[0].y += 0.01f;
+		PersonaPosZ += 0.008f;
+		printf("%f", PersonaPosZ);
 	}
 
 	if (keys[GLFW_KEY_H])
 	{
-		pointLightPositions[0].y -= 0.01f;
+		PersonaPosZ -= 0.008f;
+		printf("%f", PersonaPosZ);
 	}
 	if (keys[GLFW_KEY_U])
 	{
-		pointLightPositions[0].z -= 0.1f;
+		PersonaPosX += 0.008f;
+		printf("%f", PersonaPosX);
 	}
 	if (keys[GLFW_KEY_J])
 	{
-		pointLightPositions[0].z += 0.01f;
+		PersonaPosX -= 0.008f;
+		printf("%f", PersonaPosX);
+	}
+	if (keys[GLFW_KEY_Z])
+	{
+		PersonaPosY -= 1.0f;
+		printf("%f", PersonaPosY);
+	}
+	if (keys[GLFW_KEY_X])
+	{
+		PersonaPosZ += 1.0f;
+		printf("%f", PersonaPosY);
+	}
+	if (keys[GLFW_KEY_B])
+	{
+		PersonaAnim1 = 1;
 	}
 
 }
@@ -903,6 +1322,42 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 	if (keys[GLFW_KEY_N])
 	{
 		AnimChairs = !AnimChairs;
+		chairPos15.x += 0.7;
+		chairPos14.x += 0.2;
+
+	}
+	if (keys[GLFW_KEY_M])
+	{
+		AnimChairs7 = !AnimChairs7;
+		AnimFurniture = !AnimFurniture;
+		rotChair8N -= 90;
+
+	}
+	if (keys[GLFW_KEY_L])
+	{
+		if (play == false && (FrameIndex > 1))
+		{
+			printf("sI SE ESTA PRESIONANDOOOOOO%f");
+			resetElements();
+			//First Interpolation				
+			interpolation();
+
+			play = true;
+			playIndex = 0;
+			i_curr_steps = 0;
+		}
+		else
+		{
+			play = false;
+		}
+
+	}
+	if (keys[GLFW_KEY_1])
+	{
+		if (FrameIndex < MAX_FRAMES)
+		{
+			saveFrame();
+		}
 
 	}
 }
@@ -1082,8 +1537,300 @@ void Animation() {
 			chairEsc.x += 0.01;
 		}
 	}
+	if (AnimFurniture) {
+		if (TableEsc.z >= -0.0001) {
+			TableEsc.z -= 0.001;
+		}
+		if (TableEsc.y >= -0.0001) {
+			TableEsc.y -= 0.001;
+		}
+		if (TableEsc.x >= -0.0001) {
+			TableEsc.x -= 0.001;
+		}
+		if (chairPos1N.x>=2.6) {
+			chairPos1N.x -= 0.01;
+		}
+		if (chairPos1N.z >= -3.5) {
+			chairPos1N.z -= 0.01;
+		}
+		if (chairPos2N.x >= 2.6) {
+			chairPos2N.x -= 0.01;
+		}
+		if (chairPos2N.z >= -2.7) {
+			chairPos2N.z -= 0.01;
+		}
+		if (chairPos3N.x >= 2.6) {
+			chairPos3N.x -= 0.01;
+		}
+		if (chairPos3N.z >= 0) {
+			chairPos3N.z -= 0.01;
+		}
+		if (chairPos4N.x >= 2.6) {
+			chairPos4N.x -= 0.01;
+		}
+		if (chairPos4N.z >= 0.8) {
+			chairPos4N.z -= 0.01;
+		}
+		if (chairPos5N.x >= 0.9) {
+			chairPos5N.x -= 0.01;
+		}
+		if (chairPos5N.z <= 3.3) {
+			chairPos5N.z += 0.01;
+		}
+		if (chairPos6N.x >= 2.6) {
+			chairPos6N.x -= 0.01;
+		}
+		if (chairPos6N.z >= 2.7) {
+			chairPos6N.z -= 0.01;
+		}
+		if (chairPos7N.x >= 2.6) {
+			chairPos7N.x -= 0.01;
+		}
+		if (chairPos7N.z >= 3.3) {
+			chairPos7N.z -= 0.01;
+		}
+		if (chairPos8N.x >= 0.9) {
+			chairPos8N.x -= 0.01;
+		}
+		if (chairPos8N.z >= -3.5) {
+			chairPos8N.z -= 0.01;
+		}
+		if (chairPos9N.x >= 0.9) {
+			chairPos9N.x -= 0.01;
+		}
+		if (chairPos9N.z >= -2.7) {
+			chairPos9N.z -= 0.01;
+		}
+		if (chairPos10N.x >= 0.9) {
+			chairPos10N.x -= 0.01;
+		}
+		if (chairPos10N.z <= 0.0) {
+			chairPos10N.z += 0.01;
+		}
+		if (chairPos11N.x >= 0.9) {
+			chairPos11N.x -= 0.01;
+		}
+		if (chairPos11N.z <= 0.8) {
+			chairPos11N.z += 0.01;
+		}
+		if (chairPos12N.x >= 0.9) {
+			chairPos12N.x -= 0.01;
+		}
+		if (chairPos12N.z <= 2.7) {
+			chairPos12N.z += 0.01;
+		}
+		if (chairPos13N.x >=-0.7) {
+			chairPos13N.x -= 0.01;
+		}
+		if (chairPos13N.z >=-3.5) {
+			chairPos13N.z -= 0.01;
+		}
+		if (chairPos14N.x >=-0.7) {
+			chairPos14N.x -= 0.01;
+		}
+		else {
+			AnimFurniture2 = !AnimFurniture2;
+		}
+		if (chairPos14N.z >=-2.7) {
+			chairPos14N.z -= 0.01;
+		}
+		if (chairPos16N.x <= -0.7) {
+			chairPos16N.x += 0.01;
+		}
+		if (chairPos16N.z >= 0.0) {
+			chairPos16N.z -= 0.01;
+		}
+		if (chairPos17N.x <= -0.7) {
+			chairPos17N.x += 0.01;
+		}
+		if (chairPos17N.z >= 0.8) {
+			chairPos17N.z -= 0.01;
+		}
+		if (chairPos18N.x <= -0.7) {
+			chairPos18N.x += 0.01;
+		}
+		if (chairPos18N.z <= 2.7) {
+			chairPos18N.z += 0.01;
+		}
+		if (chairPos19N.x <= -0.7) {
+			chairPos19N.x += 0.01;
+		}
+		if (chairPos19N.z <= 3.4) {
+			chairPos19N.z += 0.01;
+			
+		}
+		
+	}
+	if (AnimFurniture2) {
+		if (TableEsc2.z <= 0.05) {
+			TableEsc2.z += 0.001;
+		}
+		if (TableEsc2.y <= 0.05) {
+			TableEsc2.y += 0.001;
+		}
+		if (TableEsc2.x <= 0.05) {
+			TableEsc2.x += 0.001;
+		}
 
+		else {
+			AnimFurniture3 = !AnimFurniture3;
+		}
+		
+	}
+	if (AnimFurniture3) {
+		if (PCEsc.z <= 0.05) {
+			PCEsc.z += 0.001;
+		}
+		if (PCEsc.y <= 0.05) {
+			PCEsc.y += 0.001;
+		}
+		if (PCEsc.x <= 0.05) {
+			PCEsc.x += 0.001;
+		}
+		if (MonitorEsc.z <= 0.05) {
+			MonitorEsc.z += 0.0005;
+		}
+		if (MonitorEsc.y <= 0.05) {
+			MonitorEsc.y += 0.0005;
+		}
+		if (MonitorEsc.x <= 0.05) {
+			MonitorEsc.x += 0.0005;
+		}
+		if (rotMonitor < 1710) {
+			rotMonitor += 10;
+		}
+	}
+	if (PersonaAnim1 == 1 && FrameIndex<5)
+	{
 
+		KeyFrame[FrameIndex].PersonaPosX = PersonaPosX;
+		KeyFrame[FrameIndex].PersonaPosY = PersonaPosY;
+		KeyFrame[FrameIndex].PersonaPosZ = PersonaPosZ;
+		KeyFrame[FrameIndex].PersonaRot = PersonaRot;
+		KeyFrame[FrameIndex].head = head;
+		KeyFrame[FrameIndex].Brazos = Brazos;
+		KeyFrame[FrameIndex].Piernas = Piernas;
+		FrameIndex++;
+
+		KeyFrame[FrameIndex].PersonaPosX = 6.0f;
+		KeyFrame[FrameIndex].PersonaPosY = 1.0f;
+		KeyFrame[FrameIndex].PersonaPosZ = -3.8f;
+		KeyFrame[FrameIndex].PersonaRot = PersonaRot;
+		KeyFrame[FrameIndex].head = head;
+		KeyFrame[FrameIndex].Brazos = Brazos;
+		KeyFrame[FrameIndex].Piernas = Piernas;
+		FrameIndex++;
+		
+		KeyFrame[FrameIndex].PersonaPosX = 4.0f;
+		KeyFrame[FrameIndex].PersonaPosY = 1.0f;
+		KeyFrame[FrameIndex].PersonaPosZ = -3.8f;
+		KeyFrame[FrameIndex].PersonaRot = PersonaRot;
+		KeyFrame[FrameIndex].head = head;
+		KeyFrame[FrameIndex].Brazos = Brazos;
+		KeyFrame[FrameIndex].Piernas = Piernas;
+		FrameIndex++;
+	
+		KeyFrame[FrameIndex].PersonaPosX = 3.5f;
+		KeyFrame[FrameIndex].PersonaPosY = 1.0f;
+		KeyFrame[FrameIndex].PersonaPosZ = 1.23f;
+		KeyFrame[FrameIndex].PersonaRot = -90;
+		KeyFrame[FrameIndex].head = head;
+		KeyFrame[FrameIndex].Brazos = Brazos;
+		KeyFrame[FrameIndex].Piernas = Piernas;
+		FrameIndex++;
+	
+		KeyFrame[FrameIndex].PersonaPosX = -1.7f;
+		KeyFrame[FrameIndex].PersonaPosY = 1.0;
+		KeyFrame[FrameIndex].PersonaPosZ = 1.23;
+		KeyFrame[FrameIndex].PersonaRot = PersonaRot;
+		KeyFrame[FrameIndex].head = 0.03;
+		KeyFrame[FrameIndex].Brazos = 15.1;
+		KeyFrame[FrameIndex].Piernas = 15.1;
+		FrameIndex++;
+
+		KeyFrame[FrameIndex].PersonaPosX = 3.5f;
+		KeyFrame[FrameIndex].PersonaPosY = 1.0f;
+		KeyFrame[FrameIndex].PersonaPosZ = 1.23;
+		KeyFrame[FrameIndex].PersonaRot = +180;
+		KeyFrame[FrameIndex].head = -0.003;
+		KeyFrame[FrameIndex].Brazos = -15.1;
+		KeyFrame[FrameIndex].Piernas = -15.1;
+		FrameIndex++;
+
+		KeyFrame[FrameIndex].PersonaPosX = 4.0f;
+		KeyFrame[FrameIndex].PersonaPosY = 1.0f;
+		KeyFrame[FrameIndex].PersonaPosZ = -3.8f;
+		KeyFrame[FrameIndex].PersonaRot = 90;
+		KeyFrame[FrameIndex].head = head;
+		KeyFrame[FrameIndex].Brazos = 15.1;
+		KeyFrame[FrameIndex].Piernas = 15.1;
+		FrameIndex++;
+
+		KeyFrame[FrameIndex].PersonaPosX = 6.0f;
+		KeyFrame[FrameIndex].PersonaPosY = 1.0f;
+		KeyFrame[FrameIndex].PersonaPosZ = -3.8f;
+		KeyFrame[FrameIndex].PersonaRot = PersonaRot;
+		KeyFrame[FrameIndex].head = head;
+		KeyFrame[FrameIndex].Brazos = -15.1;
+		KeyFrame[FrameIndex].Piernas = -15.1;
+		FrameIndex++;
+
+		PersonaAnim1 = 2;
+		
+	}
+	if (PersonaAnim1 == 2)
+	{
+		if (!step) {
+			Piernas1 += 0.1f;
+			Brazos1 += 0.1f;
+			head += 0.03f;
+
+			if (Piernas1 > 15.0f)
+				step = true;
+		}
+		else {
+			Piernas1 -= 0.1f;
+			Brazos1 -= 0.1f;
+			head -= 0.03f;
+
+			if (Piernas1 < -15.0f)
+				step = false;
+		}
+	}
+	if (play)
+	{
+		if (i_curr_steps >= i_max_steps) //end of animation between frames?
+		{
+			playIndex++;
+			if (playIndex > FrameIndex - 2)	//end of total animation?
+			{
+				printf("termina anim\n");
+				playIndex = 0;
+				play = false;
+			}
+			else //Next frame interpolations
+			{
+				i_curr_steps = 0; //Reset counter
+				//Interpolation
+				interpolation();
+			}
+		}
+		else
+		{
+			//Draw animation
+			PersonaPosX += KeyFrame[playIndex].incX;
+			PersonaPosY += KeyFrame[playIndex].incY;
+			PersonaPosZ += KeyFrame[playIndex].incZ;
+			head += KeyFrame[playIndex].headInc;
+			PersonaRot += KeyFrame[playIndex].PersonaRotInc;
+
+			Brazos += KeyFrame[playIndex].BrazosInc;
+			Piernas += KeyFrame[playIndex].PiernasInc;
+
+			i_curr_steps++;
+		}
+
+	}
 	}
 
 
